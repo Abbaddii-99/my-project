@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "default_env": "local",
+  "environments": {
+    "local": {
+      "type": "termux",
+      "script": "./start-backend.sh",
+      "health_check": "curl -s http://localhost:3000/health || echo 'No health endpoint'",
+      "backup_path": "~/.backups/local"
+    },
+    "staging": {
+      "type": "ssh",
+      "host": "${STAGING_HOST}",
+      "user": "${STAGING_USER}",
+      "script": "cd /app && ./deploy.sh",
+      "health_check": "curl -s http://staging.example.com/health"
+    },
+    "production": {
+      "type": "ssh",
+      "host": "${PROD_HOST}",
+      "user": "${PROD_USER}",
+      "script": "cd /app && ./deploy.sh",
+      "health_check": "curl -s https://api.example.com/health",
+      "requires_confirmation": true
+    }
+  },
+  "preflight": {
+    "run_tests": true,
+    "run_lint": true,
+    "check_dependencies": true
+  },
+  "backup": {
+    "enabled": true,
+    "retain_count": 3
+  },
+  "notifications": {
+    "on_success": true,
+    "on_failure": true
+  }
+}

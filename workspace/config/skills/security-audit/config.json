@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "scan_paths": ["."],
+  "exclude_paths": ["node_modules", ".git", ".cache", "dist", "build"],
+  "secret_patterns": [
+    "AKIA[0-9A-Z]{16}",
+    "sk-[a-zA-Z0-9]{20,}",
+    "ghp_[a-zA-Z0-9]{36}",
+    "-----BEGIN.*PRIVATE KEY-----"
+  ],
+  "dependency_checkers": {
+    "npm": "npm audit",
+    "pip": "safety check",
+    "go": "go list -m -u"
+  },
+  "severity_threshold": "high"
+}

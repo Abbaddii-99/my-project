@@ -1,0 +1,34 @@
+{
+  "workspace": {
+    "name": "Abbaddii Workspace",
+    "version": "1.0.0",
+    "type": "multi-project",
+    "created": "2026-04-14"
+  },
+  "structure": {
+    "projects": "workspace/projects",
+    "shared": "workspace/shared",
+    "config": "workspace/config",
+    "logs": "workspace/logs"
+  },
+  "skills_mode": {
+    "active": true,
+    "source": "Abbaddii-99/Qwen-Skills-Settings",
+    "config_path": "workspace/config/.opencode/skills-mode"
+  },
+  "github": {
+    "owner": "Abbaddii-99",
+    "repo": "my-project",
+    "token_env": "GHP_TOKEN"
+  },
+  "auto_sync": {
+    "enabled": true,
+    "interval": 60,
+    "watch_paths": ["workspace/config"]
+  },
+  "rules": {
+    "project_isolation": true,
+    "no_cross_project_mixing": true,
+    "new_projects_in_projects_dir": true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "channels": {
+    "telegram": {
+      "enabled": false,
+      "bot_token": "YOUR_BOT_TOKEN_HERE",
+      "chat_id": "YOUR_CHAT_ID_HERE",
+      "parse_mode": "Markdown",
+      "on_events": ["deploy_success", "deploy_failure", "security_alert", "critical_resource"]
+    },
+    "email": {
+      "enabled": false,
+      "email_to": "your@email.com",
+      "on_events": ["deploy_failure", "critical_resource"]
+    },
+    "local_log": {
+      "enabled": true,
+      "log_file": "~/.qwen/skills/notifications/logs/notifications.log",
+      "on_events": ["all"]
+    }
+  },
+  "defaults": {
+    "deploy_success": "normal",
+    "deploy_failure": "critical",
+    "security_alert": "high",
+    "critical_resource": "critical",
+    "daily_report": "low"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "check_interval": 300,
+  "services": {
+    "backend": {
+      "url": "http://localhost:3000/health",
+      "timeout": 5
+    }
+  },
+  "thresholds": {
+    "cpu_warning": 80,
+    "cpu_critical": 95,
+    "memory_warning": 75,
+    "memory_critical": 90,
+    "disk_warning": 80,
+    "disk_critical": 95
+  },
+  "alerts": {
+    "enabled": true,
+    "on_critical": true,
+    "on_warning": false
+  }
+}

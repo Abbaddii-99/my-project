@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "output_dir": "./docs",
+  "formats": ["markdown"],
+  "scan_languages": ["javascript", "typescript", "python"],
+  "exclude_dirs": ["node_modules", ".git", ".cache", "dist", "build"],
+  "include_private": false,
+  "generate_diagrams": false,
+  "auto_update_readme": true
+}

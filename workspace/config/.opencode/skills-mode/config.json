@@ -1,0 +1,223 @@
+{
+  "mode": "Abbaddii Skills Mode",
+  "version": "1.0.0",
+  "activated": true,
+  "source": "Abbaddii-99/Qwen-Skills-Settings",
+  "imported": "2026-04-14",
+  
+  "skills": {
+    "deploy": {
+      "name": "Deploy Skill",
+      "commands": ["/deploy", "deploy"],
+      "aliases": ["--dry-run", "--rollback", "--status"],
+      "environments": ["local", "staging", "production"],
+      "capabilities": {
+        "preflight_checks": true,
+        "backup": true,
+        "health_check": true,
+        "rollback": true,
+        "dry_run": true
+      },
+      "file": "skills/deploy/deploy.sh"
+    },
+    "monitor": {
+      "name": "Monitor Skill",
+      "commands": ["/monitor", "monitor", "mon"],
+      "modes": ["services", "resources", "logs", "report", "full"],
+      "capabilities": {
+        "service_health": true,
+        "cpu_monitoring": true,
+        "memory_monitoring": true,
+        "disk_monitoring": true,
+        "battery_monitoring": true,
+        "process_monitoring": true,
+        "port_scanning": true,
+        "health_reports": true,
+        "continuous_watch": true
+      },
+      "thresholds": {
+        "cpu_warning": 80,
+        "cpu_critical": 95,
+        "memory_warning": 75,
+        "memory_critical": 90,
+        "disk_warning": 80,
+        "disk_critical": 95
+      },
+      "file": "skills/monitor/monitor.sh"
+    },
+    "test-runner": {
+      "name": "Test Runner Skill",
+      "commands": ["/test-runner", "test", "tests"],
+      "modes": ["unit", "integration", "coverage", "watch", "auto"],
+      "frameworks": ["jest", "mocha", "vitest", "pytest", "unittest", "go-test"],
+      "capabilities": {
+        "auto_detect": true,
+        "parallel_execution": true,
+        "coverage_reporting": true,
+        "watch_mode": true,
+        "test_caching": true,
+        "failure_summaries": true
+      },
+      "config": {
+        "coverage_threshold": 80,
+        "parallel": true,
+        "cache_results": true
+      },
+      "file": "skills/test-runner/test-runner.sh"
+    },
+    "security-audit": {
+      "name": "Security Audit Skill",
+      "commands": ["/security-audit", "security", "sec"],
+      "modes": ["dependencies", "secrets", "config", "report", "full"],
+      "capabilities": {
+        "dependency_scanning": true,
+        "secret_detection": true,
+        "config_audit": true,
+        "file_permissions": true,
+        "cve_checking": true,
+        "gitignore_validation": true,
+        "report_generation": true
+      },
+      "secret_patterns": [
+        "API_KEY|api_secret|private_key|password|token",
+        "AKIA[0-9A-Z]{16}",
+        "sk-[a-zA-Z0-9]{20,}",
+        "ghp_[a-zA-Z0-9]{36}",
+        "-----BEGIN.*PRIVATE KEY-----"
+      ],
+      "file": "skills/security-audit/security-audit.sh"
+    },
+    "doc-gen": {
+      "name": "Doc Generator Skill",
+      "commands": ["/doc-gen", "docs", "doc"],
+      "modes": ["readme", "functions", "architecture", "api", "full"],
+      "capabilities": {
+        "readme_generation": true,
+        "function_documentation": true,
+        "architecture_docs": true,
+        "api_docs": true,
+        "jsdoc_parsing": true,
+        "python_docstring": true,
+        "auto_update": true,
+        "backup_on_overwrite": true
+      },
+      "output_formats": ["markdown"],
+      "file": "skills/doc-gen/doc-gen.sh"
+    },
+    "notifications": {
+      "name": "Notification Skill",
+      "commands": ["/notify", "notify", "notification"],
+      "subcommands": ["setup", "test", "logs"],
+      "channels": ["telegram", "email", "local_log"],
+      "events": [
+        "deploy_success", "deploy_failure", 
+        "security_alert", "critical_resource",
+        "daily_report"
+      ],
+      "priorities": ["low", "normal", "high", "critical"],
+      "file": "skills/notifications/notify.sh"
+    },
+    "unified-cli": {
+      "name": "Unified CLI",
+      "commands": ["skills"],
+      "pipelines": {
+        "pre-deploy": "test → security → docs → deploy",
+        "ci": "test → lint → security → build",
+        "daily-report": "health → services → deployments → security"
+      },
+      "file": "skills/unified-cli/skills.sh"
+    }
+  },
+  
+  "pipelines": {
+    "pre-deploy": {
+      "description": "Full pre-deployment pipeline",
+      "steps": ["test", "security", "docs", "deploy"],
+      "abort_on_failure": ["test", "deploy"],
+      "command": "skills pre-deploy"
+    },
+    "ci": {
+      "description": "Continuous integration pipeline",
+      "steps": ["test", "lint", "security", "build"],
+      "command": "skills ci"
+    },
+    "daily-report": {
+      "description": "Daily status summary",
+      "steps": ["monitor", "deployments", "security"],
+      "command": "skills daily-report"
+    }
+  },
+  
+  "auto_sync": {
+    "enabled": true,
+    "interval": 60,
+    "auto_commit": true,
+    "auto_push": true,
+    "log_file": "logs/sync.log",
+    "command": "scripts/auto-sync.sh"
+  },
+  
+  "behavior_rules": {
+    "priority": "ABBADDII_SKILLS_FIRST",
+    "overrides_defaults": true,
+    "rules": [
+      {
+        "skill": "deploy",
+        "rule": "Always run pre-flight checks before deployment",
+        "conditions": ["deploy command"]
+      },
+      {
+        "skill": "deploy",
+        "rule": "Create backup before deployment",
+        "conditions": ["deploy without --dry-run"]
+      },
+      {
+        "skill": "monitor",
+        "rule": "Alert on threshold violations (configurable)",
+        "conditions": ["resource check"]
+      },
+      {
+        "skill": "monitor",
+        "rule": "Run health check after deployment",
+        "conditions": ["deploy complete"]
+      },
+      {
+        "skill": "security-audit",
+        "rule": "Scan for exposed secrets before commit",
+        "conditions": ["git commit"]
+      },
+      {
+        "skill": "security-audit",
+        "rule": "Check .env in .gitignore",
+        "conditions": ["git push"]
+      },
+      {
+        "skill": "test-runner",
+        "rule": "Run tests before deployment",
+        "conditions": ["deploy production"]
+      },
+      {
+        "skill": "doc-gen",
+        "rule": "Update docs on significant changes",
+        "conditions": ["feature complete"]
+      },
+      {
+        "skill": "notifications",
+        "rule": "Send alerts on deployment status",
+        "conditions": ["deploy complete"]
+      },
+      {
+        "skill": "auto-sync",
+        "rule": "Auto-commit project changes",
+        "conditions": ["file change detected"]
+      }
+    ]
+  },
+  
+  "git_integration": {
+    "owner": "Abbaddii-99",
+    "repo": "my-project",
+    "token_env": "GHP_TOKEN",
+    "auto_auth": true
+  }
+}

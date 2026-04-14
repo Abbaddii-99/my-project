@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "default_framework": "auto-detect",
+  "watch_patterns": ["**/*.test.js", "**/*.spec.js", "**/*.test.ts", "**/*.spec.ts"],
+  "coverage": {
+    "enabled": true,
+    "threshold": 80,
+    "reporters": ["text", "lcov", "html"]
+  },
+  "parallel": true,
+  "cache_results": true
+}
